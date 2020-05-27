@@ -2217,6 +2217,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2738,6 +2739,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2746,6 +2764,19 @@ __webpack_require__.r(__webpack_exports__);
       snackbar: false,
       text: '',
       selected: [],
+      roles: [],
+      rules: {
+        required: function required(v) {
+          return !!v || 'This field is required';
+        },
+        min: function min(v) {
+          return v.length >= 5 || 'Minimum 5 Charecter Required';
+        },
+        validEmail: function validEmail(v) {
+          return /.+@.+\..+/.test(v) || 'E-mail must be valid';
+        }
+      },
+      valid: true,
       headers: [{
         text: '#',
         align: 'start',
@@ -2786,6 +2817,8 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         email: '',
         role: '',
+        password: '',
+        rpassword: '',
         created_at: '',
         updated_at: ''
       }
@@ -2794,6 +2827,9 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     formTitle: function formTitle() {
       return this.editedIndex === -1 ? 'New User' : 'Edit User';
+    },
+    passwordMatch: function passwordMatch() {
+      return this.editedItem.password != this.editedItem.rpassword ? 'Password Does not match' : '';
     }
   },
   watch: {
@@ -2868,8 +2904,9 @@ __webpack_require__.r(__webpack_exports__);
         }
       }) // .then(res => console.log(res.data.users) )
       .then(function (res) {
+        // console.log(res.data.users)
         _this3.users = res.data.users;
-        console.log(res.data.users);
+        _this3.roles = res.data.roles;
       })["catch"](function (err) {
         if (err.response.status == 401) localStorage.removeItem('token');
 
@@ -20892,6 +20929,14 @@ var render = function() {
                                 "v-form",
                                 {
                                   ref: "form",
+                                  attrs: { method: "post" },
+                                  on: {
+                                    submit: function($event) {
+                                      $event.stopPropagation()
+                                      $event.preventDefault()
+                                      return _vm.login($event)
+                                    }
+                                  },
                                   model: {
                                     value: _vm.valid,
                                     callback: function($$v) {
@@ -20904,7 +20949,7 @@ var render = function() {
                                   _c("v-text-field", {
                                     attrs: {
                                       color: "error",
-                                      label: "Login",
+                                      label: "E-mail",
                                       rules: _vm.emailRules,
                                       required: "",
                                       name: "login",
@@ -20959,7 +21004,12 @@ var render = function() {
                                     color: "error",
                                     disabled: !_vm.valid
                                   },
-                                  on: { click: _vm.login }
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.login($event)
+                                    }
+                                  }
                                 },
                                 [_vm._v("Login")]
                               )
@@ -21433,32 +21483,164 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c(
-                            "v-card-text",
+                            "v-form",
+                            {
+                              attrs: { method: "post" },
+                              on: {
+                                submit: function($event) {
+                                  $event.stopPropagation()
+                                  $event.preventDefault()
+                                  return _vm.save($event)
+                                }
+                              },
+                              model: {
+                                value: _vm.valid,
+                                callback: function($$v) {
+                                  _vm.valid = $$v
+                                },
+                                expression: "valid"
+                              }
+                            },
                             [
                               _c(
-                                "v-container",
+                                "v-card-text",
                                 [
                                   _c(
-                                    "v-row",
+                                    "v-container",
                                     [
                                       _c(
-                                        "v-col",
-                                        { attrs: { cols: "12", sm: "12" } },
+                                        "v-row",
                                         [
-                                          _c("v-text-field", {
-                                            attrs: { label: "User name" },
-                                            model: {
-                                              value: _vm.editedItem.name,
-                                              callback: function($$v) {
-                                                _vm.$set(
-                                                  _vm.editedItem,
-                                                  "name",
-                                                  $$v
-                                                )
-                                              },
-                                              expression: "editedItem.name"
-                                            }
-                                          })
+                                          _c(
+                                            "v-col",
+                                            { attrs: { cols: "12", sm: "12" } },
+                                            [
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  label: "Name",
+                                                  rules: [
+                                                    _vm.rules.required,
+                                                    _vm.rules.min
+                                                  ]
+                                                },
+                                                model: {
+                                                  value: _vm.editedItem.name,
+                                                  callback: function($$v) {
+                                                    _vm.$set(
+                                                      _vm.editedItem,
+                                                      "name",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression: "editedItem.name"
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-col",
+                                            { attrs: { cols: "12", sm: "12" } },
+                                            [
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  type: "password",
+                                                  rules: [_vm.rules.required],
+                                                  label: "Type Password"
+                                                },
+                                                model: {
+                                                  value:
+                                                    _vm.editedItem.password,
+                                                  callback: function($$v) {
+                                                    _vm.$set(
+                                                      _vm.editedItem,
+                                                      "password",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression:
+                                                    "editedItem.password"
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-col",
+                                            { attrs: { cols: "12", sm: "12" } },
+                                            [
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  type: "password",
+                                                  rules: [
+                                                    _vm.rules.required,
+                                                    _vm.passwordMatch
+                                                  ],
+                                                  label: "Retype Password"
+                                                },
+                                                model: {
+                                                  value:
+                                                    _vm.editedItem.rpassword,
+                                                  callback: function($$v) {
+                                                    _vm.$set(
+                                                      _vm.editedItem,
+                                                      "rpassword",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression:
+                                                    "editedItem.rpassword"
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-col",
+                                            { attrs: { cols: "12", sm: "12" } },
+                                            [
+                                              _c("v-text-field", {
+                                                attrs: {
+                                                  type: "email",
+                                                  rules: [
+                                                    _vm.rules.required,
+                                                    _vm.rules.validEmail
+                                                  ],
+                                                  label: "Type Email"
+                                                },
+                                                model: {
+                                                  value: _vm.editedItem.email,
+                                                  callback: function($$v) {
+                                                    _vm.$set(
+                                                      _vm.editedItem,
+                                                      "email",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression: "editedItem.email"
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-col",
+                                            { attrs: { cols: "12", sm: "12" } },
+                                            [
+                                              _c("v-select", {
+                                                attrs: {
+                                                  items: _vm.roles,
+                                                  rules: [_vm.rules.required],
+                                                  label: "Select Role"
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          )
                                         ],
                                         1
                                       )
@@ -21467,32 +21649,45 @@ var render = function() {
                                   )
                                 ],
                                 1
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "v-card-actions",
-                            [
-                              _c("v-spacer"),
-                              _vm._v(" "),
-                              _c(
-                                "v-btn",
-                                {
-                                  attrs: { color: "blue darken-1", text: "" },
-                                  on: { click: _vm.close }
-                                },
-                                [_vm._v("Cancel")]
                               ),
                               _vm._v(" "),
                               _c(
-                                "v-btn",
-                                {
-                                  attrs: { color: "blue darken-1", text: "" },
-                                  on: { click: _vm.save }
-                                },
-                                [_vm._v("Save")]
+                                "v-card-actions",
+                                [
+                                  _c("v-spacer"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        color: "blue darken-1",
+                                        text: ""
+                                      },
+                                      on: { click: _vm.close }
+                                    },
+                                    [_vm._v("Cancel")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        type: "submit",
+                                        color: "blue darken-1",
+                                        text: "",
+                                        disabled: !_vm.valid
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          return _vm.save($event)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Save")]
+                                  )
+                                ],
+                                1
                               )
                             ],
                             1

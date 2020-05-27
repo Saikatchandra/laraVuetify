@@ -40,12 +40,28 @@
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
             </v-card-title>
-
+         <v-form
+             v-model="valid"
+              method="post"
+              v-on:submit.stop.prevent="save"
+         >
             <v-card-text>
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="12">
-                    <v-text-field v-model="editedItem.name" label="User name"></v-text-field>
+                    <v-text-field v-model="editedItem.name" label="Name" :rules="[rules.required, rules.min]" ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12">
+                    <v-text-field type="password" :rules="[rules.required]" v-model="editedItem.password" label="Type Password"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12">
+                    <v-text-field type="password" :rules="[rules.required, passwordMatch]" v-model="editedItem.rpassword" label="Retype Password"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12">
+                    <v-text-field type="email" :rules="[rules.required, rules.validEmail]" v-model="editedItem.email" label="Type Email"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12">
+                    <v-select :items="roles" :rules="[rules.required]" label="Select Role" ></v-select>
                   </v-col>
                   
                 </v-row>
@@ -55,8 +71,9 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+              <v-btn type="submit" color="blue darken-1" text :disabled="!valid" @click.prevent="save">Save</v-btn>
             </v-card-actions>
+         </v-form>   
           </v-card>
         </v-dialog>
       </v-toolbar>
@@ -108,13 +125,15 @@
       snackbar: false,
       text: '',
       selected: [],
+      roles: [],
+      rules: {
+        required: v => !!v || 'This field is required',
+        min: v => v.length >=5 || 'Minimum 5 Charecter Required',
+        validEmail:  v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      },
+      valid: true,
       headers: [
-        {
-          text: '#',
-          align: 'start',
-          sortable: false,
-          value: 'id',
-        },
+        { text: '#', align: 'start',sortable: false,value: 'id'},
         { text: 'Name', value: 'name' },
         { text: 'Email', value: 'email' },
         { text: 'Role', value: 'role' },
@@ -138,6 +157,8 @@
         name: '',
         email: '',
         role: '',
+        password: '',
+        rpassword: '',
         created_at: '',
         updated_at: ''
         
@@ -148,6 +169,9 @@
       formTitle () {
         return this.editedIndex === -1 ? 'New User' : 'Edit User'
       },
+      passwordMatch(){
+        return this.editedItem.password != this.editedItem.rpassword ? 'Password Does not match' : ''
+      }
     },
 
     watch: {
@@ -206,8 +230,9 @@
          axios.get(`/api/users?page=${e.page}`,{params:{'per_page':e.itemsPerPage}})
         // .then(res => console.log(res.data.users) )
           .then(res => {
+            // console.log(res.data.users)
             this.users = res.data.users 
-            console.log(res.data.users)
+            this.roles = res.data.roles 
           })
 
           .catch(err => {

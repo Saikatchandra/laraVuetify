@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Role;
 use Auth;
 use Illuminate\Support\Str;
 use App\Http\Resources\User as UserResource;
@@ -15,7 +16,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $per_page = $request->per_page;
-        return response()->json(['users'=> UserResource::collection (User::paginate($per_page))],200);
+        return response()->json(['users'=> UserResource::collection (User::paginate($per_page)), 'roles' => Role::pluck('name')->all() ],200);
     }
 
     /**

@@ -35,10 +35,11 @@
                 <v-form
                     ref="form"
 			        v-model="valid"
-			       
-                >
+			        method="post"
+			        v-on:submit.stop.prevent="login"
+			    >
                   <v-text-field color="error"
-                    label="Login"
+                    label="E-mail"
                     v-model="email"
                     :rules="emailRules"
                     required
@@ -61,7 +62,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="error" :disabled="!valid" @click="login" >Login</v-btn>
+                <v-btn color="error" :disabled="!valid" @click.prevent="login" >Login</v-btn>
               </v-card-actions>
             </v-card>
              <v-snackbar
