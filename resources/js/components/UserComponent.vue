@@ -7,7 +7,7 @@
     :loading="loading"
   	loading-text="Loading... Please wait"
     :headers="headers"
-    :items="users.data"
+    :items="users"
     :server-items-length="users.total"
     :items-per-page=5
     show-select
@@ -205,7 +205,11 @@
         // console.dir(e)
          axios.get(`/api/users?page=${e.page}`,{params:{'per_page':e.itemsPerPage}})
         // .then(res => console.log(res.data.users) )
-          .then(res => this.users = res.data.users )
+          .then(res => {
+            this.users = res.data.users 
+            console.log(res.data.users)
+          })
+
           .catch(err => {
             if(err.response.status == 401)
               localStorage.removeItem('token');

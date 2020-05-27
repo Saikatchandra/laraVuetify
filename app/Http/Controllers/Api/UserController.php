@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Auth;
 use Illuminate\Support\Str;
+use App\Http\Resources\User as UserResource;
 
 class UserController extends Controller
 {
@@ -14,7 +15,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $per_page = $request->per_page;
-        return response()->json(['users'=> User::paginate($per_page)],200);
+        return response()->json(['users'=> UserResource::collection (User::paginate($per_page))],200);
     }
 
     /**

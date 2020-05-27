@@ -2868,7 +2868,8 @@ __webpack_require__.r(__webpack_exports__);
         }
       }) // .then(res => console.log(res.data.users) )
       .then(function (res) {
-        return _this3.users = res.data.users;
+        _this3.users = res.data.users;
+        console.log(res.data.users);
       })["catch"](function (err) {
         if (err.response.status == 401) localStorage.removeItem('token');
 
@@ -21346,7 +21347,7 @@ var render = function() {
         loading: _vm.loading,
         "loading-text": "Loading... Please wait",
         headers: _vm.headers,
-        items: _vm.users.data,
+        items: _vm.users,
         "server-items-length": _vm.users.total,
         "items-per-page": 5,
         "show-select": "",
