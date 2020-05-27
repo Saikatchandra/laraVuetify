@@ -28,13 +28,13 @@ const routes = [
       	name: 'Roles'
       },
      ],
-<<<<<<< HEAD
+
      beforeEnter: (to, from, next) => {
        axios.get('api/verify')
          .then(res => next())
          .catch(err => next('/login'))
       }
-=======
+
      // beforeEnter: (to, from, next) => {
      //    if(localStorage.getItem('token')){
      //    	next();
@@ -42,7 +42,7 @@ const routes = [
      //    	next('/login');
      //    }
      //  }
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
+
  },
 ]
 

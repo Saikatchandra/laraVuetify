@@ -41,15 +41,8 @@
           class="mt-4"
           link
         >
-<<<<<<< HEAD
          
           <v-list-item-title class="grey--text text--darken-1"> <v-switch v-model="theme" class="ma-4" label="Switch theme"></v-switch></v-list-item-title>
-=======
-          <v-list-item-action>
-            <v-icon color="grey darken-1">mdi-plus-circle-outline</v-icon>
-          </v-list-item-action>
-          <v-list-item-title class="grey--text text--darken-1">Browse Channels</v-list-item-title>
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
         </v-list-item>
         <v-list-item link @click="logout">
           <v-list-item-action>
@@ -63,11 +56,7 @@
     <v-app-bar
       app
       clipped-left
-<<<<<<< HEAD
     
-=======
-      color="red"
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
       dense
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -132,10 +121,7 @@
       
     },
     data: () => ({
-<<<<<<< HEAD
       theme: true,
-=======
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
       drawer: null,
       snackbar: false,
       items: [
@@ -172,14 +158,11 @@
 			      })
 			      .catch(err => console.log(err))
     	}
-<<<<<<< HEAD
     },
     watch:{
       theme(old, newval){
          this.$vuetify.theme.dark = old;
       }
-=======
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
     }
 	}
 </script>

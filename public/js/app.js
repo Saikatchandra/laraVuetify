@@ -2024,21 +2024,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-<<<<<<< HEAD
-=======
-//
-//
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     source: String
   },
   data: function data() {
     return {
-<<<<<<< HEAD
       theme: true,
-=======
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
       drawer: null,
       snackbar: false,
       items: [{
@@ -2100,14 +2092,11 @@ __webpack_require__.r(__webpack_exports__);
         return console.log(err);
       });
     }
-<<<<<<< HEAD
   },
   watch: {
     theme: function theme(old, newval) {
       this.$vuetify.theme.dark = old;
     }
-=======
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
   }
 });
 
@@ -2397,80 +2386,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-<<<<<<< HEAD
-=======
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       loading: false,
       dialog: false,
-<<<<<<< HEAD
       snackbar: false,
-=======
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
       headers: [{
         text: '#',
         align: 'start',
@@ -2561,7 +2482,6 @@ __webpack_require__.r(__webpack_exports__);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-<<<<<<< HEAD
       var _this2 = this;
 
       var index = this.roles.indexOf(item);
@@ -2597,35 +2517,12 @@ __webpack_require__.r(__webpack_exports__);
         })["catch"](function (err) {
           return console.log(err.response);
         }); // Object.assign(this.roles[this.editedIndex], this.editedItem)
-=======
-      var index = this.roles.indexOf(item);
-      confirm('Are you sure you want to delete this item?') && this.roles.splice(index, 1);
-    },
-    close: function close() {
-      var _this2 = this;
-
-      this.dialog = false;
-      this.$nextTick(function () {
-        _this2.editedItem = Object.assign({}, _this2.defaultItem);
-        _this2.editedIndex = -1;
-      });
-    },
-    save: function save() {
-      var _this3 = this;
-
-      if (this.editedIndex > -1) {
-        Object.assign(this.roles[this.editedIndex], this.editedItem);
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
       } else {
         axios.post('/api/roles', {
           'name': this.editedItem.name
         }) // .then(res => console.dir(res.data) )
         .then(function (res) {
-<<<<<<< HEAD
           return _this4.roles.push(res.data.role);
-=======
-          return _this3.roles.push(res.data.role);
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
         })["catch"](function (err) {
           return console.dir(err.response);
         });
@@ -20327,7 +20224,6 @@ var render = function() {
                 { staticClass: "mt-4", attrs: { link: "" } },
                 [
                   _c(
-<<<<<<< HEAD
                     "v-list-item-title",
                     { staticClass: "grey--text text--darken-1" },
                     [
@@ -20344,21 +20240,6 @@ var render = function() {
                       })
                     ],
                     1
-=======
-                    "v-list-item-action",
-                    [
-                      _c("v-icon", { attrs: { color: "grey darken-1" } }, [
-                        _vm._v("mdi-plus-circle-outline")
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-list-item-title",
-                    { staticClass: "grey--text text--darken-1" },
-                    [_vm._v("Browse Channels")]
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
                   )
                 ],
                 1
@@ -20395,11 +20276,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "v-app-bar",
-<<<<<<< HEAD
         { attrs: { app: "", "clipped-left": "", dense: "" } },
-=======
-        { attrs: { app: "", "clipped-left": "", color: "red", dense: "" } },
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
         [
           _c("v-app-bar-nav-icon", {
             on: {
@@ -20756,7 +20633,6 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-<<<<<<< HEAD
   return _c(
     "v-data-table",
     {
@@ -20992,200 +20868,6 @@ var render = function() {
     ],
     1
   )
-=======
-  return _c("v-data-table", {
-    staticClass: "elevation-1",
-    attrs: { headers: _vm.headers, items: _vm.roles, "sort-by": "calories" },
-    scopedSlots: _vm._u([
-      {
-        key: "top",
-        fn: function() {
-          return [
-            _c(
-              "v-toolbar",
-              { attrs: { flat: "", color: "dark" } },
-              [
-                _c("v-toolbar-title", [_vm._v("Role Management ")]),
-                _vm._v(" "),
-                _c("v-divider", {
-                  staticClass: "mx-4",
-                  attrs: { inset: "", vertical: "" }
-                }),
-                _vm._v(" "),
-                _c("v-spacer"),
-                _vm._v(" "),
-                _c(
-                  "v-dialog",
-                  {
-                    attrs: { "max-width": "500px" },
-                    scopedSlots: _vm._u([
-                      {
-                        key: "activator",
-                        fn: function(ref) {
-                          var on = ref.on
-                          return [
-                            _c(
-                              "v-btn",
-                              _vm._g(
-                                {
-                                  staticClass: "mb-2",
-                                  attrs: { color: "primary", dark: "" }
-                                },
-                                on
-                              ),
-                              [_vm._v("Add New Role")]
-                            )
-                          ]
-                        }
-                      }
-                    ]),
-                    model: {
-                      value: _vm.dialog,
-                      callback: function($$v) {
-                        _vm.dialog = $$v
-                      },
-                      expression: "dialog"
-                    }
-                  },
-                  [
-                    _vm._v(" "),
-                    _c(
-                      "v-card",
-                      [
-                        _c("v-card-title", [
-                          _c("span", { staticClass: "headline" }, [
-                            _vm._v(_vm._s(_vm.formTitle))
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "v-card-text",
-                          [
-                            _c(
-                              "v-container",
-                              [
-                                _c(
-                                  "v-row",
-                                  [
-                                    _c(
-                                      "v-col",
-                                      { attrs: { cols: "12", sm: "12" } },
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Role name" },
-                                          model: {
-                                            value: _vm.editedItem.name,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "name",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.name"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                )
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-card-actions",
-                          [
-                            _c("v-spacer"),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                attrs: { color: "blue darken-1", text: "" },
-                                on: { click: _vm.close }
-                              },
-                              [_vm._v("Cancel")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                attrs: { color: "blue darken-1", text: "" },
-                                on: { click: _vm.save }
-                              },
-                              [_vm._v("Save")]
-                            )
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              ],
-              1
-            )
-          ]
-        },
-        proxy: true
-      },
-      {
-        key: "item.actions",
-        fn: function(ref) {
-          var item = ref.item
-          return [
-            _c(
-              "v-icon",
-              {
-                staticClass: "mr-2",
-                attrs: { small: "" },
-                on: {
-                  click: function($event) {
-                    return _vm.editItem(item)
-                  }
-                }
-              },
-              [_vm._v("\n      mdi-pencil\n    ")]
-            ),
-            _vm._v(" "),
-            _c(
-              "v-icon",
-              {
-                attrs: { small: "" },
-                on: {
-                  click: function($event) {
-                    return _vm.deleteItem(item)
-                  }
-                }
-              },
-              [_vm._v("\n      mdi-delete\n    ")]
-            )
-          ]
-        }
-      },
-      {
-        key: "no-data",
-        fn: function() {
-          return [
-            _c(
-              "v-btn",
-              { attrs: { color: "primary" }, on: { click: _vm.initialize } },
-              [_vm._v("Reset")]
-            )
-          ]
-        },
-        proxy: true
-      }
-    ])
-  })
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -78469,7 +78151,6 @@ var routes = [{
     path: 'roles',
     component: _components_RoleComponent__WEBPACK_IMPORTED_MODULE_4__["default"],
     name: 'Roles'
-<<<<<<< HEAD
   }],
   beforeEnter: function beforeEnter(to, from, next) {
     axios.get('api/verify').then(function (res) {
@@ -78477,9 +78158,7 @@ var routes = [{
     })["catch"](function (err) {
       return next('/login');
     });
-  }
-=======
-  }] // beforeEnter: (to, from, next) => {
+  } // beforeEnter: (to, from, next) => {
   //    if(localStorage.getItem('token')){
   //    	next();
   //    } else {
@@ -78487,7 +78166,6 @@ var routes = [{
   //    }
   //  }
 
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: routes

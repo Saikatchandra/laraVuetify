@@ -53,38 +53,16 @@ class RoleController extends Controller
         //
     }
 
-<<<<<<< HEAD
-    
-=======
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
-<<<<<<< HEAD
+
         $role = Role::find($id);
         $role->name = $request->name;
         $role->save();
         return response()->json(['role' => $role], 200);
-=======
-        //
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
+
     }
 
     /**
@@ -95,12 +73,10 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-<<<<<<< HEAD
+
         $role = Role::find($id);
         $role->delete();
         return response()->json(['role' => $role], 200);
-=======
-        //
->>>>>>> 013b3b04339bc5e1c3fd1261669922a6773f1102
+
     }
 }
