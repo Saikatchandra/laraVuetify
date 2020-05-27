@@ -2084,9 +2084,10 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       localStorage.removeItem('token');
+      localStorage.removeItem('loggedIn');
       this.$router.push('/login').then(function (res) {
-        console.log('logged out'); // this.text = "You are Logged Out successfully";
-
+        console.log('logged out');
+        _this.text = "You are Logged Out successfully";
         _this.snackbar = true;
       })["catch"](function (err) {
         return console.log(err);
@@ -2269,11 +2270,16 @@ __webpack_require__.r(__webpack_exports__);
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('loggedIn', true);
 
-        _this.$router.push('/admin').then(function (res) {
-          return console.log('loggin success');
-        })["catch"](function (err) {
-          return console.log(err);
-        });
+        if (res.data.isAdmin) {
+          _this.$router.push('/admin').then(function (res) {
+            return console.log('loggin success');
+          })["catch"](function (err) {
+            return console.log(err);
+          });
+        } else {
+          _this.text = "You need to  logged in as Administrator";
+          _this.snackbar = true;
+        }
       })["catch"](function (err) {
         _this.text = err.response.data.status;
         _this.snackbar = true;
@@ -2394,6 +2400,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2401,6 +2408,7 @@ __webpack_require__.r(__webpack_exports__);
       dialog: false,
       snackbar: false,
       text: '',
+      selected: [],
       headers: [{
         text: '#',
         align: 'start',
@@ -2450,109 +2458,165 @@ __webpack_require__.r(__webpack_exports__);
     this.initialize();
   },
   methods: {
-    paginate: function paginate(e) {
+    selectAll: function selectAll(e) {
+      this.selected = [];
+
+      if (e.length > 0) {
+        this.selected = e.map(function (val) {
+          return val.id;
+        });
+      } // console.dir(this.selected)
+
+    },
+    deleteAll: function deleteAll() {
       var _this = this;
 
-      console.dir(e);
+      var decide = confirm('Are you sure you want to delete these item?');
+
+      if (decide) {
+        axios.post('/api/roles/delete', {
+          'role': this.selected
+        }).then(function (res) {
+          _this.text = "Record Deleted Successfully";
+
+          _this.selected.map(function (val) {
+            var index = _this.roles.data.indexOf(val);
+
+            _this.roles.data.splice(index, 1);
+          });
+
+          _this.snackbar = true;
+        })["catch"](function (err) {
+          console.log(err.response);
+          _this.text = "Error Deleting Record";
+          _this.snackbar = true;
+        });
+      }
+    },
+    searchIt: function searchIt(e) {
+      var _this2 = this;
+
+      // console.dir(e);
+      if (e.length > 2) {
+        axios.get("/api/roles/".concat(e)) // .then(res => console.log(res.data.roles))
+        .then(function (res) {
+          return _this2.roles = res.data.roles;
+        })["catch"](function (err) {
+          return console.dir(err.response);
+        });
+      } // if(e.length<=0){
+      //   axios.get(`/api/roles`)
+      //     .then(res => this.roles = res.data.roles)
+      //     .catch(err => console.dir(err.response))
+      // }
+
+    },
+    paginate: function paginate(e) {
+      var _this3 = this;
+
+      // console.dir(e)
       axios.get("/api/roles?page=".concat(e.page), {
         params: {
           'per_page': e.itemsPerPage
         }
       }) // .then(res => console.log(res.data.roles) )
       .then(function (res) {
-        return _this.roles = res.data.roles;
+        return _this3.roles = res.data.roles;
       })["catch"](function (err) {
         if (err.response.status == 401) localStorage.removeItem('token');
 
-        _this.$router.push('/login');
+        _this3.$router.push('/login');
       });
     },
     initialize: function initialize() {
-      var _this2 = this;
+      var _this4 = this;
 
       // Add a request interceptor
       axios.interceptors.request.use(function (config) {
         // conver into ES6 format remove (function) add (=>) then we can this keyword also
         // Do something before request is sent
-        _this2.loading = true;
+        _this4.loading = true;
         return config;
       }, function (error) {
         // Do something with request error
-        _this2.loading = false;
+        _this4.loading = false;
         return Promise.reject(error);
       }); // Add a response interceptor
 
       axios.interceptors.response.use(function (response) {
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
-        _this2.loading = false;
+        _this4.loading = false;
         return response;
       }, function (error) {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
-        _this2.loading = false;
+        _this4.loading = false;
         return Promise.reject(error);
       });
     },
     editItem: function editItem(item) {
-      this.editedIndex = this.roles.indexOf(item);
+      this.editedIndex = this.roles.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-      var _this3 = this;
+      var _this5 = this;
 
-      var index = this.roles.indexOf(item);
+      var index = this.roles.data.indexOf(item);
       var decide = confirm('Are you sure you want to delete this item?');
 
       if (decide) {
         axios["delete"]('/api/roles/' + item.id).then(function (res) {
-          _this3.snackbar = true;
+          _this5.text = "Record Deleted Successfully";
+          _this5.snackbar = true;
 
-          _this3.roles.splice(index, 1);
+          _this5.roles.data.splice(index, 1);
         })["catch"](function (err) {
-          return console.log(err.response);
+          console.log(err.response);
+          _this5.text = "Error Deleting Record";
+          _this5.snackbar = true;
         });
       }
     },
     close: function close() {
-      var _this4 = this;
+      var _this6 = this;
 
       this.dialog = false;
       this.$nextTick(function () {
-        _this4.editedItem = Object.assign({}, _this4.defaultItem);
-        _this4.editedIndex = -1;
+        _this6.editedItem = Object.assign({}, _this6.defaultItem);
+        _this6.editedIndex = -1;
       });
     },
     save: function save() {
-      var _this5 = this;
+      var _this7 = this;
 
       if (this.editedIndex > -1) {
         var index = this.editedIndex;
         axios.put('/api/roles/' + this.editedItem.id, {
           'name': this.editedItem.name
         }).then(function (res) {
-          _this5.text = "Record Update Successfully";
-          _this5.snackbar = true;
-          Object.assign(_this5.roles[index], res.data.role);
+          _this7.text = "Record Update Successfully";
+          _this7.snackbar = true;
+          Object.assign(_this7.roles.data[index], res.data.role);
         })["catch"](function (err) {
           console.log(err.response);
-          _this5.text = "Error Updating Record";
-          _this5.snackbar = true;
+          _this7.text = "Error Updating Record";
+          _this7.snackbar = true;
         }); // Object.assign(this.roles[this.editedIndex], this.editedItem)
       } else {
         axios.post('/api/roles', {
           'name': this.editedItem.name
         }) // .then(res => console.dir(res.data) )
         .then(function (res) {
-          _this5.text = "Record Added Successfully";
-          _this5.snackbar = true;
+          _this7.text = "Record Added Successfully";
+          _this7.snackbar = true;
 
-          _this5.roles.push(res.data.role);
+          _this7.roles.data.push(res.data.role);
         })["catch"](function (err) {
           console.dir(err.response);
-          _this5.text = "Error Inserting Record";
-          _this5.snackbar = true;
+          _this7.text = "Error Inserting Record";
+          _this7.snackbar = true;
         });
       }
 
@@ -20213,41 +20277,6 @@ var render = function() {
               }),
               _vm._v(" "),
               _c(
-                "v-subheader",
-                { staticClass: "mt-4 grey--text text--darken-1" },
-                [_vm._v("SUBSCRIPTIONS")]
-              ),
-              _vm._v(" "),
-              _c(
-                "v-list",
-                _vm._l(_vm.items2, function(item) {
-                  return _c(
-                    "v-list-item",
-                    { key: item.text, attrs: { link: "" } },
-                    [
-                      _c("v-list-item-avatar", [
-                        _c("img", {
-                          attrs: {
-                            src:
-                              "https://randomuser.me/api/portraits/men/" +
-                              item.picture +
-                              ".jpg",
-                            alt: ""
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("v-list-item-title", {
-                        domProps: { textContent: _vm._s(item.text) }
-                      })
-                    ],
-                    1
-                  )
-                }),
-                1
-              ),
-              _vm._v(" "),
-              _c(
                 "v-list-item",
                 { staticClass: "mt-4", attrs: { link: "" } },
                 [
@@ -20674,13 +20703,16 @@ var render = function() {
         items: _vm.roles.data,
         "server-items-length": _vm.roles.total,
         "items-per-page": 5,
+        "show-select": "",
         "sort-by": "calories",
         "footer-props": {
           itemsPerPageOptions: [5, 10],
-          itemsPerPageText: "Roles per page"
+          itemsPerPageText: "Roles per page",
+          showCurrentPage: true,
+          showFirstLastPage: true
         }
       },
-      on: { pagination: _vm.paginate },
+      on: { input: _vm.selectAll, pagination: _vm.paginate },
       scopedSlots: _vm._u([
         {
           key: "top",
@@ -20690,7 +20722,7 @@ var render = function() {
                 "v-toolbar",
                 { attrs: { flat: "", color: "dark" } },
                 [
-                  _c("v-toolbar-title", [_vm._v("Role Management ")]),
+                  _c("v-toolbar-title", [_vm._v("Role  ")]),
                   _vm._v(" "),
                   _c("v-divider", {
                     staticClass: "mx-4",
@@ -20719,6 +20751,16 @@ var render = function() {
                                   on
                                 ),
                                 [_vm._v("Add New Role")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-btn",
+                                {
+                                  staticClass: "mb-2 mr-2",
+                                  attrs: { color: "primary", dark: "" },
+                                  on: { click: _vm.deleteAll }
+                                },
+                                [_vm._v("Delete")]
                               )
                             ]
                           }
@@ -20811,6 +20853,25 @@ var render = function() {
                         ],
                         1
                       )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-row",
+                [
+                  _c(
+                    "v-col",
+                    { attrs: { cols: "12" } },
+                    [
+                      _c("v-text-field", {
+                        staticClass: "mx-4",
+                        attrs: { label: "Search" },
+                        on: { input: _vm.searchIt }
+                      })
                     ],
                     1
                   )

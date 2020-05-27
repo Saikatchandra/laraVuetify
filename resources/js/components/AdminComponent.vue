@@ -21,7 +21,7 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader>
+       <!--  <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader>
         <v-list>
           <v-list-item
             v-for="item in items2"
@@ -36,7 +36,7 @@
             </v-list-item-avatar>
             <v-list-item-title v-text="item.text"></v-list-item-title>
           </v-list-item>
-        </v-list>
+        </v-list> -->
         <v-list-item
           class="mt-4"
           link
@@ -150,10 +150,11 @@
     methods:{
     	logout(){
     		localStorage.removeItem('token');
+        localStorage.removeItem('loggedIn');
     		this.$router.push('/login')
 			      .then(res => {
 			      	console.log('logged out');
-			      	// this.text = "You are Logged Out successfully";
+			      	this.text = "You are Logged Out successfully";
 			      	this.snackbar = true;
 			      })
 			      .catch(err => console.log(err))

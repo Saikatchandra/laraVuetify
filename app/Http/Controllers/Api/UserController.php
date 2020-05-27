@@ -19,8 +19,8 @@ class UserController extends Controller
     	 	$token = Str::random(80);
     	 	Auth::user()->api_token = $token;
     	 	Auth::user()->save();
-    	 
-    	    return response()->json(['token'=> $token],200);
+    	   $admin = Auth::user()->isAdmin();
+    	    return response()->json(['token'=> $token, 'isAdmin' => $admin],200);
     	 }
         	
     	return response()->json(['status'=> 'Email Or Password is wrong '],403);
