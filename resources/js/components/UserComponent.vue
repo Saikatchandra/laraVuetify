@@ -84,6 +84,9 @@
        </v-row>
     
     </template>
+    <template v-slot:item.photo="{ item }" >
+       <v-img :src="item.photo"  aspect-ratio="1" class="grey lighten-2" max-width="50" max-height="50"></v-img>
+    </template>>
     <template v-slot:item.actions="{ item }">
       <v-icon
         small
@@ -137,6 +140,7 @@
         { text: 'Name', value: 'name' },
         { text: 'Email', value: 'email' },
         { text: 'Role', value: 'role' },
+        { text: 'Photo', value: 'photo' },
         { text: 'Created at', value: 'created_at' },
         { text: 'Updated at', value: 'updated_at' },
         { text: 'Actions', value: 'actions', sortable: false },
@@ -144,7 +148,7 @@
       users: [],
       editedIndex: -1,
       editedItem: {
-      	 id:'',
+      	id:'',
         name: '',
         email: '',
         role: '',
@@ -157,6 +161,7 @@
         name: '',
         email: '',
         role: '',
+        photo: '',
         password: '',
         rpassword: '',
         created_at: '',

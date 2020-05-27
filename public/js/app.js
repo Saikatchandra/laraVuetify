@@ -2756,6 +2756,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2792,6 +2795,9 @@ __webpack_require__.r(__webpack_exports__);
         text: 'Role',
         value: 'role'
       }, {
+        text: 'Photo',
+        value: 'photo'
+      }, {
         text: 'Created at',
         value: 'created_at'
       }, {
@@ -2817,6 +2823,7 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         email: '',
         role: '',
+        photo: '',
         password: '',
         rpassword: '',
         created_at: '',
@@ -21725,6 +21732,23 @@ var render = function() {
           proxy: true
         },
         {
+          key: "item.photo",
+          fn: function(ref) {
+            var item = ref.item
+            return [
+              _c("v-img", {
+                staticClass: "grey lighten-2",
+                attrs: {
+                  src: item.photo,
+                  "aspect-ratio": "1",
+                  "max-width": "50",
+                  "max-height": "50"
+                }
+              })
+            ]
+          }
+        },
+        {
           key: "item.actions",
           fn: function(ref) {
             var item = ref.item
@@ -21775,6 +21799,7 @@ var render = function() {
     },
     [
       _vm._v(" "),
+      _vm._v(">\n  "),
       _vm._v(" "),
       _vm._v(" "),
       _c(
