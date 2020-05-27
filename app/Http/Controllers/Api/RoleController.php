@@ -13,9 +13,10 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(['roles'=> Role::all()],200);
+        $per_page = $request->per_page;
+        return response()->json(['roles'=> Role::paginate($per_page)],200);
     }
 
     /**

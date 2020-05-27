@@ -7,12 +7,14 @@
     :loading="loading"
   	loading-text="Loading... Please wait"
     :headers="headers"
-    :items="roles"
+    :items="roles.data"
+    :server-items-length="roles.total"
     :items-per-page=5
     @pagination="paginate"
     sort-by="calories"
     :footer-props="{
-       itemsPerPageOptions: [5,10]
+       itemsPerPageOptions: [5,10],
+       itemsPerPageText: 'Roles per page'
   }"
   >
     <template v-slot:top>
@@ -151,8 +153,9 @@
     },
 
     methods: {
-      paginate($event){
-         axios.get('/api/roles',{})
+      paginate(e){
+        console.dir(e)
+         axios.get(`/api/roles?page=${e.page}`,{params:{'per_page':e.itemsPerPage}})
         // .then(res => console.log(res.data.roles) )
           .then(res => this.roles = res.data.roles )
           .catch(err => {

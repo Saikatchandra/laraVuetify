@@ -2392,6 +2392,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2448,10 +2450,15 @@ __webpack_require__.r(__webpack_exports__);
     this.initialize();
   },
   methods: {
-    paginate: function paginate($event) {
+    paginate: function paginate(e) {
       var _this = this;
 
-      axios.get('/api/roles', {}) // .then(res => console.log(res.data.roles) )
+      console.dir(e);
+      axios.get("/api/roles?page=".concat(e.page), {
+        params: {
+          'per_page': e.itemsPerPage
+        }
+      }) // .then(res => console.log(res.data.roles) )
       .then(function (res) {
         return _this.roles = res.data.roles;
       })["catch"](function (err) {
@@ -20664,11 +20671,13 @@ var render = function() {
         loading: _vm.loading,
         "loading-text": "Loading... Please wait",
         headers: _vm.headers,
-        items: _vm.roles,
+        items: _vm.roles.data,
+        "server-items-length": _vm.roles.total,
         "items-per-page": 5,
         "sort-by": "calories",
         "footer-props": {
-          itemsPerPageOptions: [5, 10]
+          itemsPerPageOptions: [5, 10],
+          itemsPerPageText: "Roles per page"
         }
       },
       on: { pagination: _vm.paginate },
