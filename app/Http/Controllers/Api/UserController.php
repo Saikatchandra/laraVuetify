@@ -10,6 +10,85 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $per_page = $request->per_page;
+        return response()->json(['users'=> User::paginate($per_page)],200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+       $user =  User::create([
+            'name' => $request->name,
+        ]);
+        return response()->json(['user'=>$user], 200);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $users = User::where('name', 'LIKE', "%$id%")->paginate();
+         return response()->json(['users' => $users], 200);
+    }
+
+
+
+    public function update(Request $request, $id)
+    {
+
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->save();
+        return response()->json(['user' => $user], 200);
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+
+        $user = User::find($id);
+        $user->delete();
+        return response()->json(['user' => $user], 200);
+
+    }
+    
+    public function deleteAll(Request $request){
+       $user =  User::whereIn('id', $request->users);
+        $user->delete();
+        return response()->json(['message' => 'Records Deleted Successfully'], 200);
+    }
+
+
+
+
     public function login(Request $request){
     	// when we send ajax request then we debug by this 
     	// echo json_encode($request->all());exit;

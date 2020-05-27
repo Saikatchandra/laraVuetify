@@ -125,7 +125,7 @@
       drawer: null,
       snackbar: false,
       items: [
-        { icon: 'mdi-account-circle-outline', text: 'Users', action: '#'  },
+        { icon: 'mdi-account-circle-outline', text: 'Users', action: '/admin/users'  },
         { icon: 'mdi-post-outline', text: 'Posts', action: '#' },
         { icon: 'mdi-circle-edit-outline', text: 'Pages', action: '#' },
         { icon: 'mdi-briefcase-edit-outline', text: 'Categories', action: '#' },

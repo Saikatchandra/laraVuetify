@@ -17,7 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware'=>['auth:api'], 'namespace'=>'Api'], function(){
 	Route::resource('roles','RoleController');
+	Route::resource('users','UserController');
+	
 	Route::get('verify', 'UserController@verify');
+	
+	Route::post('users/delete', 'UserController@deleteAll');
 	Route::post('roles/delete', 'RoleController@deleteAll');
 });
  
