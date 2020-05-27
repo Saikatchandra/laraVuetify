@@ -1,5 +1,6 @@
 
 <template>
+ <v-app id="inspire"> 
   <v-data-table
     item-key="name" 
   	class="elevation-1" 
@@ -7,7 +8,7 @@
     :loading="loading"
   	loading-text="Loading... Please wait"
     :headers="headers"
-    :items="users"
+    :items="users.data"
     :server-items-length="users.total"
     :items-per-page=5
     show-select
@@ -49,7 +50,7 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="12">
-                    <v-text-field v-model="editedItem.name" label="Name" :rules="[rules.required, rules.min]" ></v-text-field>
+                    <v-text-field type="text" label="Name"  v-model="editedItem.name" :rules="[rules.required, rules.min]" ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="12">
                     <v-text-field type="password" :rules="[rules.required]" v-model="editedItem.password" label="Type Password"></v-text-field>
@@ -61,7 +62,7 @@
                     <v-text-field type="email" :rules="[rules.required, rules.validEmail]" v-model="editedItem.email" label="Type Email"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="12">
-                    <v-select :items="roles" :rules="[rules.required]" label="Select Role" ></v-select>
+                    <v-select :items="roles" :rules="[rules.required]" v-model="editedItem.role" label="Select Role" ></v-select>
                   </v-col>
                   
                 </v-row>
@@ -71,7 +72,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn type="submit" color="blue darken-1" text :disabled="!valid" @click.prevent="save">Save</v-btn>
+              <v-btn type="submit" color="blue darken-1" text  @click.prevent="save">Save</v-btn>
             </v-card-actions>
          </v-form>   
           </v-card>
@@ -86,7 +87,7 @@
     </template>
     <template v-slot:item.photo="{ item }" >
        <v-img :src="item.photo"  aspect-ratio="1" class="grey lighten-2" max-width="50" max-height="50"></v-img>
-    </template>>
+    </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
         small
@@ -105,24 +106,20 @@
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
     </template>
-     <v-snackbar
-      v-model="snackbar"
-    >
+  </v-data-table>
+     <v-snackbar v-model="snackbar">
       {{ text }}
-      <v-btn
-        color="pink"
-        text
-        @click="snackbar = false"
-      >
+      <v-btn color="pink"text @click="snackbar = false">
         Close
       </v-btn>
     </v-snackbar>
-  </v-data-table>
+   </v-app> 
 </template>
 
 <script>
   export default {
     data: () => ({
+      valid: true,
       loading: false,
       dialog: false,
       snackbar: false,
@@ -134,7 +131,7 @@
         min: v => v.length >=5 || 'Minimum 5 Charecter Required',
         validEmail:  v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       },
-      valid: true,
+      
       headers: [
         { text: '#', align: 'start',sortable: false,value: 'id'},
         { text: 'Name', value: 'name' },
@@ -310,7 +307,7 @@
       save () {
       	
         if (this.editedIndex > -1) {
-        const index = this.editedIndex
+         const index = this.editedIndex
          axios.put('/api/users/'+this.editedItem.id, {'name': this.editedItem.name})
 	          .then(res => { 
               this.text = "Record Update Successfully";
@@ -325,11 +322,11 @@
            })
           // Object.assign(this.users[this.editedIndex], this.editedItem)
         } else {
-        	axios.post('/api/users',{'name': this.editedItem.name})
-      	     // .then(res => console.dir(res.data) )
+        	axios.post('/api/users/', this.editedItem)
+      	     
       	     .then(res => {
               this.text = "Record Added Successfully";
-              this.snackbar = true
+              this.snackbar=true;
               this.users.data.push(res.data.user)
            
             })

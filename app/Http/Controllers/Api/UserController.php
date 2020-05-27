@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 use App\Role;
+use App\Profile;
 use Auth;
 use Illuminate\Support\Str;
-use App\Http\Resources\User as UserResource;
+use App\Http\Resources\User as UserResource; //this is for single record
+use App\Http\Resources\UserCollection;
 
 class UserController extends Controller
 {
@@ -16,7 +18,10 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $per_page = $request->per_page;
-        return response()->json(['users'=> UserResource::collection (User::paginate($per_page)), 'roles' => Role::pluck('name')->all() ],200);
+        return response()->json([
+            'users'=> new UserCollection(User::paginate($per_page)), 
+            'roles' => Role::pluck('name')->all() 
+        ],200);
     }
 
     /**
@@ -37,10 +42,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       $user =  User::create([
+       $role = Role::where('name', $request->role)->first();  
+       $user = new User ([
             'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
         ]);
-        return response()->json(['user'=>$user], 200);
+        $user->role()->associate($role);
+        $user->save();
+        $user->profile()->save(new Profile());
+        return response()->json(['user'=>  new UserResource($user)], 200);
     }
 
     /**
@@ -78,6 +89,7 @@ class UserController extends Controller
 
         $user = User::find($id);
         $user->delete();
+        Profile::where('user_id',$id)->delete();
         return response()->json(['user' => $user], 200);
 
     }
