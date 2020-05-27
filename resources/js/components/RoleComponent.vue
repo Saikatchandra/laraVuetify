@@ -2,12 +2,18 @@
 <template>
   <v-data-table
     item-key="name" 
-	class="elevation-1" 
-	
-	loading-text="Loading... Please wait"
+  	class="elevation-1" 
+  	color="error"
+    :loading="loading"
+  	loading-text="Loading... Please wait"
     :headers="headers"
     :items="roles"
+    :items-per-page=5
+    @pagination="paginate"
     sort-by="calories"
+    :footer-props="{
+       itemsPerPageOptions: [5,10]
+  }"
   >
     <template v-slot:top>
       <v-toolbar flat color="dark">
@@ -76,18 +82,18 @@
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
     </template>
-      <v-snackbar
-		  v-model="snackbar"
-		>
-		     Role Delete successfully!
-		      <v-btn
-		        color="error"
-		        text
-		        @click="snackbar = false"
-		      >
-		        Close
-		      </v-btn>
-		    </v-snackbar>
+     <v-snackbar
+      v-model="snackbar"
+    >
+      {{ text }}
+      <v-btn
+        color="pink"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-data-table>
 </template>
 
@@ -97,6 +103,7 @@
       loading: false,
       dialog: false,
       snackbar: false,
+      text: '',
       headers: [
         {
           text: '#',
@@ -129,7 +136,7 @@
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        return this.editedIndex === -1 ? 'New Role' : 'Edit Role'
       },
     },
 
@@ -144,6 +151,16 @@
     },
 
     methods: {
+      paginate($event){
+         axios.get('/api/roles',{})
+        // .then(res => console.log(res.data.roles) )
+          .then(res => this.roles = res.data.roles )
+          .catch(err => {
+            if(err.response.status == 401)
+              localStorage.removeItem('token');
+                this.$router.push('/login');
+          })
+      },
       initialize () {
         
         	// Add a request interceptor
@@ -169,14 +186,7 @@
 			    this.loading = false;
 			    return Promise.reject(error);
 			  });
-			 axios.get('/api/roles',{})
-        // .then(res => console.log(res.data.roles) )
-        	.then(res => this.roles = res.data.roles )
-        	.catch(err => {
-        		if(err.response.status == 401)
-        			localStorage.removeItem('token');
-        		    this.$router.push('/login');
-        	})
+			
       },
      
 
@@ -210,17 +220,36 @@
       save () {
       	
         if (this.editedIndex > -1) {
+        const index = this.editedIndex
          axios.put('/api/roles/'+this.editedItem.id, {'name': this.editedItem.name})
-	          .then(res => Object.assign(this.roles[this.editedIndex], res.data.role))
-	          .catch(err => console.log(err.response))
+	          .then(res => { 
+              this.text = "Record Update Successfully";
+              this.snackbar = true
+              Object.assign(this.roles[index], res.data.role)
+            
+            })
+	          .catch(err => {
+                console.log(err.response)
+                this.text = "Error Updating Record"
+                this.snackbar = true
+           })
           // Object.assign(this.roles[this.editedIndex], this.editedItem)
         } else {
         	axios.post('/api/roles',{'name': this.editedItem.name})
       	     // .then(res => console.dir(res.data) )
-      	     .then(res => this.roles.push(res.data.role))
-	      	 .catch(err => console.dir(err.response))
+      	     .then(res => {
+              this.text = "Record Added Successfully";
+              this.snackbar = true
+              this.roles.push(res.data.role)
+           
+            })
+	      	 .catch(err => { 
+              console.dir(err.response)
+              this.text = "Error Inserting Record"
+              this.snackbar = true
+            })
 	        }
-	        this.close()
+	       this.close()
 	      },
     },
 }

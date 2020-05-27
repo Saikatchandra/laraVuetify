@@ -2386,12 +2386,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       loading: false,
       dialog: false,
       snackbar: false,
+      text: '',
       headers: [{
         text: '#',
         align: 'start',
@@ -2429,7 +2436,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     formTitle: function formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+      return this.editedIndex === -1 ? 'New Role' : 'Edit Role';
     }
   },
   watch: {
@@ -2441,32 +2448,9 @@ __webpack_require__.r(__webpack_exports__);
     this.initialize();
   },
   methods: {
-    initialize: function initialize() {
+    paginate: function paginate($event) {
       var _this = this;
 
-      // Add a request interceptor
-      axios.interceptors.request.use(function (config) {
-        // conver into ES6 format remove (function) add (=>) then we can this keyword also
-        // Do something before request is sent
-        _this.loading = true;
-        return config;
-      }, function (error) {
-        // Do something with request error
-        _this.loading = false;
-        return Promise.reject(error);
-      }); // Add a response interceptor
-
-      axios.interceptors.response.use(function (response) {
-        // Any status code that lie within the range of 2xx cause this function to trigger
-        // Do something with response data
-        _this.loading = false;
-        return response;
-      }, function (error) {
-        // Any status codes that falls outside the range of 2xx cause this function to trigger
-        // Do something with response error
-        _this.loading = false;
-        return Promise.reject(error);
-      });
       axios.get('/api/roles', {}) // .then(res => console.log(res.data.roles) )
       .then(function (res) {
         return _this.roles = res.data.roles;
@@ -2476,55 +2460,92 @@ __webpack_require__.r(__webpack_exports__);
         _this.$router.push('/login');
       });
     },
+    initialize: function initialize() {
+      var _this2 = this;
+
+      // Add a request interceptor
+      axios.interceptors.request.use(function (config) {
+        // conver into ES6 format remove (function) add (=>) then we can this keyword also
+        // Do something before request is sent
+        _this2.loading = true;
+        return config;
+      }, function (error) {
+        // Do something with request error
+        _this2.loading = false;
+        return Promise.reject(error);
+      }); // Add a response interceptor
+
+      axios.interceptors.response.use(function (response) {
+        // Any status code that lie within the range of 2xx cause this function to trigger
+        // Do something with response data
+        _this2.loading = false;
+        return response;
+      }, function (error) {
+        // Any status codes that falls outside the range of 2xx cause this function to trigger
+        // Do something with response error
+        _this2.loading = false;
+        return Promise.reject(error);
+      });
+    },
     editItem: function editItem(item) {
       this.editedIndex = this.roles.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-      var _this2 = this;
+      var _this3 = this;
 
       var index = this.roles.indexOf(item);
       var decide = confirm('Are you sure you want to delete this item?');
 
       if (decide) {
         axios["delete"]('/api/roles/' + item.id).then(function (res) {
-          _this2.snackbar = true;
+          _this3.snackbar = true;
 
-          _this2.roles.splice(index, 1);
+          _this3.roles.splice(index, 1);
         })["catch"](function (err) {
           return console.log(err.response);
         });
       }
     },
     close: function close() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.dialog = false;
       this.$nextTick(function () {
-        _this3.editedItem = Object.assign({}, _this3.defaultItem);
-        _this3.editedIndex = -1;
+        _this4.editedItem = Object.assign({}, _this4.defaultItem);
+        _this4.editedIndex = -1;
       });
     },
     save: function save() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.editedIndex > -1) {
+        var index = this.editedIndex;
         axios.put('/api/roles/' + this.editedItem.id, {
           'name': this.editedItem.name
         }).then(function (res) {
-          return Object.assign(_this4.roles[_this4.editedIndex], res.data.role);
+          _this5.text = "Record Update Successfully";
+          _this5.snackbar = true;
+          Object.assign(_this5.roles[index], res.data.role);
         })["catch"](function (err) {
-          return console.log(err.response);
+          console.log(err.response);
+          _this5.text = "Error Updating Record";
+          _this5.snackbar = true;
         }); // Object.assign(this.roles[this.editedIndex], this.editedItem)
       } else {
         axios.post('/api/roles', {
           'name': this.editedItem.name
         }) // .then(res => console.dir(res.data) )
         .then(function (res) {
-          return _this4.roles.push(res.data.role);
+          _this5.text = "Record Added Successfully";
+          _this5.snackbar = true;
+
+          _this5.roles.push(res.data.role);
         })["catch"](function (err) {
-          return console.dir(err.response);
+          console.dir(err.response);
+          _this5.text = "Error Inserting Record";
+          _this5.snackbar = true;
         });
       }
 
@@ -20639,11 +20660,18 @@ var render = function() {
       staticClass: "elevation-1",
       attrs: {
         "item-key": "name",
+        color: "error",
+        loading: _vm.loading,
         "loading-text": "Loading... Please wait",
         headers: _vm.headers,
         items: _vm.roles,
-        "sort-by": "calories"
+        "items-per-page": 5,
+        "sort-by": "calories",
+        "footer-props": {
+          itemsPerPageOptions: [5, 10]
+        }
       },
+      on: { pagination: _vm.paginate },
       scopedSlots: _vm._u([
         {
           key: "top",
@@ -20800,7 +20828,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("\n        mdi-pencil\n      ")]
+                [_vm._v("\n      mdi-pencil\n    ")]
               ),
               _vm._v(" "),
               _c(
@@ -20813,7 +20841,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("\n        mdi-delete\n      ")]
+                [_vm._v("\n      mdi-delete\n    ")]
               )
             ]
           }
@@ -20849,18 +20877,18 @@ var render = function() {
           }
         },
         [
-          _vm._v("\n\t\t     Role Delete successfully!\n\t\t      "),
+          _vm._v("\n    " + _vm._s(_vm.text) + "\n    "),
           _c(
             "v-btn",
             {
-              attrs: { color: "error", text: "" },
+              attrs: { color: "pink", text: "" },
               on: {
                 click: function($event) {
                   _vm.snackbar = false
                 }
               }
             },
-            [_vm._v("\n\t\t        Close\n\t\t      ")]
+            [_vm._v("\n      Close\n    ")]
           )
         ],
         1
