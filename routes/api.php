@@ -24,6 +24,7 @@ Route::group(['middleware'=>['auth:api'], 'namespace'=>'Api'], function(){
 	
 	Route::post('users/delete', 'UserController@deleteAll');
 	Route::post('roles/delete', 'RoleController@deleteAll');
+	Route::post('user/role', 'UserController@changeRole');
 });
  
 

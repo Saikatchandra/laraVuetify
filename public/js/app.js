@@ -2764,6 +2764,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2855,19 +2874,33 @@ __webpack_require__.r(__webpack_exports__);
     this.initialize();
   },
   methods: {
-    checkEmail: function checkEmail() {
+    updateRole: function updateRole(item) {
       var _this = this;
+
+      var index = this.users.data.indexOf(item);
+      axios.post('api/user/role', {
+        'role': item.role,
+        'user': item.id
+      }).then(function (res) {
+        _this.text = res.data.user.name + "'s Role Update to " + res.data.user.role;
+        _this.snackbar = true;
+      })["catch"](function (err) {
+        return console.dir(err.response);
+      });
+    },
+    checkEmail: function checkEmail() {
+      var _this2 = this;
 
       if (/.+@.+\..+/.test(this.editedItem.email)) {
         axios.post('/api/email/verify', {
           'email': this.editedItem.email
         }).then(function (res) {
           console.log(res.data);
-          _this.success = res.data.message;
-          _this.error = '';
+          _this2.success = res.data.message;
+          _this2.error = '';
         })["catch"](function (err) {
-          _this.success = '';
-          _this.error = 'Email Already Exists';
+          _this2.success = '';
+          _this2.error = 'Email Already Exists';
         });
       }
     },
@@ -2882,7 +2915,7 @@ __webpack_require__.r(__webpack_exports__);
 
     },
     deleteAll: function deleteAll() {
-      var _this2 = this;
+      var _this3 = this;
 
       var decide = confirm('Are you sure you want to delete these item?');
 
@@ -2890,30 +2923,30 @@ __webpack_require__.r(__webpack_exports__);
         axios.post('/api/users/delete', {
           'user': this.selected
         }).then(function (res) {
-          _this2.text = "Record Deleted Successfully";
+          _this3.text = "Record Deleted Successfully";
 
-          _this2.selected.map(function (val) {
-            var index = _this2.users.data.indexOf(val);
+          _this3.selected.map(function (val) {
+            var index = _this3.users.data.indexOf(val);
 
-            _this2.users.data.splice(index, 1);
+            _this3.users.data.splice(index, 1);
           });
 
-          _this2.snackbar = true;
+          _this3.snackbar = true;
         })["catch"](function (err) {
           console.log(err.response);
-          _this2.text = "Error Deleting Record";
-          _this2.snackbar = true;
+          _this3.text = "Error Deleting Record";
+          _this3.snackbar = true;
         });
       }
     },
     searchIt: function searchIt(e) {
-      var _this3 = this;
+      var _this4 = this;
 
       // console.dir(e);
       if (e.length > 2) {
         axios.get("/api/users/".concat(e)) // .then(res => console.log(res.data.users))
         .then(function (res) {
-          return _this3.users = res.data.users;
+          return _this4.users = res.data.users;
         })["catch"](function (err) {
           return console.dir(err.response);
         });
@@ -2925,7 +2958,7 @@ __webpack_require__.r(__webpack_exports__);
 
     },
     paginate: function paginate(e) {
-      var _this4 = this;
+      var _this5 = this;
 
       // console.dir(e)
       axios.get("/api/users?page=".concat(e.page), {
@@ -2935,38 +2968,38 @@ __webpack_require__.r(__webpack_exports__);
       }) // .then(res => console.log(res.data.users) )
       .then(function (res) {
         // console.log(res.data.users)
-        _this4.users = res.data.users;
-        _this4.roles = res.data.roles;
+        _this5.users = res.data.users;
+        _this5.roles = res.data.roles;
       })["catch"](function (err) {
         if (err.response.status == 401) localStorage.removeItem('token');
 
-        _this4.$router.push('/login');
+        _this5.$router.push('/login');
       });
     },
     initialize: function initialize() {
-      var _this5 = this;
+      var _this6 = this;
 
       // Add a request interceptor
       axios.interceptors.request.use(function (config) {
         // conver into ES6 format remove (function) add (=>) then we can this keyword also
         // Do something before request is sent
-        _this5.loading = true;
+        _this6.loading = true;
         return config;
       }, function (error) {
         // Do something with request error
-        _this5.loading = false;
+        _this6.loading = false;
         return Promise.reject(error);
       }); // Add a response interceptor
 
       axios.interceptors.response.use(function (response) {
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
-        _this5.loading = false;
+        _this6.loading = false;
         return response;
       }, function (error) {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
-        _this5.loading = false;
+        _this6.loading = false;
         return Promise.reject(error);
       });
     },
@@ -2976,57 +3009,57 @@ __webpack_require__.r(__webpack_exports__);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-      var _this6 = this;
+      var _this7 = this;
 
       var index = this.users.data.indexOf(item);
       var decide = confirm('Are you sure you want to delete this item?');
 
       if (decide) {
         axios["delete"]('/api/users/' + item.id).then(function (res) {
-          _this6.text = "Record Deleted Successfully";
-          _this6.snackbar = true;
+          _this7.text = "Record Deleted Successfully";
+          _this7.snackbar = true;
 
-          _this6.users.data.splice(index, 1);
+          _this7.users.data.splice(index, 1);
         })["catch"](function (err) {
           console.log(err.response);
-          _this6.text = "Error Deleting Record";
-          _this6.snackbar = true;
+          _this7.text = "Error Deleting Record";
+          _this7.snackbar = true;
         });
       }
     },
     close: function close() {
-      var _this7 = this;
+      var _this8 = this;
 
       this.dialog = false;
       this.$nextTick(function () {
-        _this7.editedItem = Object.assign({}, _this7.defaultItem);
-        _this7.editedIndex = -1;
+        _this8.editedItem = Object.assign({}, _this8.defaultItem);
+        _this8.editedIndex = -1;
       });
     },
     save: function save() {
-      var _this8 = this;
+      var _this9 = this;
 
       if (this.editedIndex > -1) {
         var index = this.editedIndex;
         axios.put('/api/users/' + this.editedItem.id, this.editedItem).then(function (res) {
-          _this8.text = "Record Update Successfully";
-          _this8.snackbar = true;
-          Object.assign(_this8.users.data[index], res.data.user);
+          _this9.text = "Record Update Successfully";
+          _this9.snackbar = true;
+          Object.assign(_this9.users.data[index], res.data.user);
         })["catch"](function (err) {
           console.log(err.response);
-          _this8.text = "Error Updating Record";
-          _this8.snackbar = true;
+          _this9.text = "Error Updating Record";
+          _this9.snackbar = true;
         }); // Object.assign(this.users[this.editedIndex], this.editedItem)
       } else {
         axios.post('/api/users/', this.editedItem).then(function (res) {
-          _this8.text = "Record Added Successfully";
-          _this8.snackbar = true;
+          _this9.text = "Record Added Successfully";
+          _this9.snackbar = true;
 
-          _this8.users.data.push(res.data.user);
+          _this9.users.data.push(res.data.user);
         })["catch"](function (err) {
           console.dir(err.response);
-          _this8.text = "Error Inserting Record";
-          _this8.snackbar = true;
+          _this9.text = "Error Inserting Record";
+          _this9.snackbar = true;
         });
       }
 
@@ -21816,6 +21849,65 @@ var render = function() {
               ]
             },
             proxy: true
+          },
+          {
+            key: "item.role",
+            fn: function(ref) {
+              var item = ref.item
+              return [
+                _c(
+                  "v-edit-dialog",
+                  {
+                    attrs: {
+                      large: "",
+                      block: "",
+                      persistent: "",
+                      "return-value": item.role
+                    },
+                    on: {
+                      "update:returnValue": function($event) {
+                        return _vm.$set(item, "role", $event)
+                      },
+                      "update:return-value": function($event) {
+                        return _vm.$set(item, "role", $event)
+                      },
+                      save: function($event) {
+                        return _vm.updateRole(item)
+                      }
+                    },
+                    scopedSlots: _vm._u(
+                      [
+                        {
+                          key: "input",
+                          fn: function() {
+                            return [
+                              _c("v-select", {
+                                attrs: {
+                                  items: _vm.roles,
+                                  rules: [_vm.rules.required],
+                                  label: "Select Role"
+                                },
+                                model: {
+                                  value: item.role,
+                                  callback: function($$v) {
+                                    _vm.$set(item, "role", $$v)
+                                  },
+                                  expression: "item.role"
+                                }
+                              })
+                            ]
+                          },
+                          proxy: true
+                        }
+                      ],
+                      null,
+                      true
+                    )
+                  },
+                  [_vm._v("\n         " + _vm._s(item.role) + "\n        ")]
+                )
+              ]
+            }
           },
           {
             key: "item.photo",

@@ -88,6 +88,25 @@
        </v-row>
     
     </template>
+   
+     <template v-slot:item.role = "{ item }">
+       <v-edit-dialog
+           large
+           block
+           persistent
+           :return-value.sync="item.role"
+           @save="updateRole(item)"
+       >
+          {{ item.role }}
+         <!--  <template v-slot:input>
+            <h2>Change Role</h2>
+          </template> -->
+          <template v-slot:input>
+            <v-select :items="roles" :rules="[rules.required]" v-model="item.role" label="Select Role" ></v-select>
+          </template>
+        </v-edit-dialog>
+     </template>
+
     <template v-slot:item.photo="{ item }" >
        <v-img 
        :src="item.photo"  
@@ -198,6 +217,20 @@
     },
 
     methods: {
+      updateRole(item){
+        const index = this.users.data.indexOf(item);
+        axios.post('/api/user/role', {'role': item.role, 'user': item.id})
+          .then(res => {
+            this.text = res.data.user.name + "'s Role Update to " + res.data.user.role
+            this.snackbar = true
+          })
+          .catch(error => {
+            this.text = error.response.data.user.name + "'s Role can't Updated to" + error.response.data.user.role
+            this.users.data[index].role = error.response.data.user.role
+            this.snackbar = true
+            console.dir(error.response)
+          })
+      },
       checkEmail(){
        if(/.+@.+\..+/.test(this.editedItem.email)){
              axios.post('/api/email/verify', {'email': this.editedItem.email})

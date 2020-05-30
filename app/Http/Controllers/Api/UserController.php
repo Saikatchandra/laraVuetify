@@ -126,6 +126,18 @@ class UserController extends Controller
     	return $request->user()->only('name','email');
     }
 
+    public function changeRole(Request $request){
+        $user = User::find($request->user);
+        $loggedInUser = $request->user();
+        if($user->id == $loggedInUser->id){
+           return response()->json(['user' => new UserResource($loggedInUser)], 422);
+        }
+        $role = Role::where('name', $request->role)->first();
+        $user->role()->associate($role);
+        $user->save();
+        return response()->json(['user' => new UserResource($user)], 200);
+    }
+
     public function verifyEmail(Request $request){
        $request->validate([
           'email' => 'required|unique:users',
