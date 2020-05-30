@@ -61,7 +61,7 @@
                     <v-text-field type="password" :rules="[rules.required, passwordMatch]" v-model="editedItem.rpassword" label="Retype Password"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="12">
-                    <v-text-field type="email" :rules="[rules.required, rules.validEmail]" v-model="editedItem.email" label="Type Email"></v-text-field>
+                    <v-text-field type="email" :success-messages="success" :error-messages="error" @blur="checkEmail"  :rules="[rules.required, rules.validEmail]" v-model="editedItem.email" autocomplete="off" label="Type Email"></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -89,7 +89,13 @@
     
     </template>
     <template v-slot:item.photo="{ item }" >
-       <v-img :src="item.photo"  aspect-ratio="1" class="grey lighten-2" max-width="50" max-height="50"></v-img>
+       <v-img 
+       :src="item.photo"  
+       :lazy-src="item.photo"
+       aspect-ratio="1" 
+       class="grey lighten-2" 
+       max-width="50" 
+       max-height="50"></v-img>
     </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
@@ -127,6 +133,8 @@
       dialog: false,
       snackbar: false,
       text: '',
+      success: '',
+      error: '',
       selected: [],
       roles: [],
       rules: {
@@ -134,7 +142,6 @@
         min: v => v.length >=5 || 'Minimum 5 Charecter Required',
         validEmail:  v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       },
-      
       headers: [
         { text: '#', align: 'start',sortable: false,value: 'id'},
         { text: 'Name', value: 'name' },
@@ -176,7 +183,8 @@
       },
       passwordMatch(){
         return this.editedItem.password != this.editedItem.rpassword ? 'Password Does not match' : ''
-      }
+      },
+      
     },
 
     watch: {
@@ -190,6 +198,20 @@
     },
 
     methods: {
+      checkEmail(){
+       if(/.+@.+\..+/.test(this.editedItem.email)){
+             axios.post('/api/email/verify', {'email': this.editedItem.email})
+               .then(res => {
+                console.log(res.data)
+                 this.success = res.data.message
+                 this.error = '';
+               })
+               .catch(err => {
+                 this.success = '';
+                 this.error = 'Email Already Exists'
+               })
+       } 
+      },
       selectAll(e){
         this.selected = [];
         if(e.length > 0){

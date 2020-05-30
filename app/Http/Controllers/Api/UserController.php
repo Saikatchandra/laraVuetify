@@ -125,4 +125,11 @@ class UserController extends Controller
     public function verify(Request $request){
     	return $request->user()->only('name','email');
     }
+
+    public function verifyEmail(Request $request){
+       $request->validate([
+          'email' => 'required|unique:users',
+       ]);
+       return response()->json(['message' => 'Valid Email'], 200);
+    }
 }
