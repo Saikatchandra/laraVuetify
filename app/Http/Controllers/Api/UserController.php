@@ -70,11 +70,13 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-
+        $role = Role::where('name', $request->role)->first();
         $user = User::find($id);
         $user->name = $request->name;
+        $user->role()->dissociate($user->role);
+        $user->role()->associate($role);
         $user->save();
-        return response()->json(['user' => $user], 200);
+        return response()->json(['user' => new UserResource($user)], 200);
 
     }
 

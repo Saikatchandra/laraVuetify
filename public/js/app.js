@@ -2755,6 +2755,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2981,9 +2984,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.editedIndex > -1) {
         var index = this.editedIndex;
-        axios.put('/api/users/' + this.editedItem.id, {
-          'name': this.editedItem.name
-        }).then(function (res) {
+        axios.put('/api/users/' + this.editedItem.id, this.editedItem).then(function (res) {
           _this7.text = "Record Update Successfully";
           _this7.snackbar = true;
           Object.assign(_this7.users.data[index], res.data.user);
@@ -21543,103 +21544,137 @@ var render = function() {
                                                 })
                                               ],
                                               1
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "v-col",
-                                              {
-                                                attrs: { cols: "12", sm: "12" }
-                                              },
+                                            )
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _vm.editedIndex == -1
+                                          ? _c(
+                                              "v-row",
                                               [
-                                                _c("v-text-field", {
-                                                  attrs: {
-                                                    type: "password",
-                                                    rules: [_vm.rules.required],
-                                                    label: "Type Password"
+                                                _c(
+                                                  "v-col",
+                                                  {
+                                                    attrs: {
+                                                      cols: "12",
+                                                      sm: "12"
+                                                    }
                                                   },
-                                                  model: {
-                                                    value:
-                                                      _vm.editedItem.password,
-                                                    callback: function($$v) {
-                                                      _vm.$set(
-                                                        _vm.editedItem,
-                                                        "password",
-                                                        $$v
-                                                      )
-                                                    },
-                                                    expression:
-                                                      "editedItem.password"
-                                                  }
-                                                })
+                                                  [
+                                                    _c("v-text-field", {
+                                                      attrs: {
+                                                        type: "password",
+                                                        rules: [
+                                                          _vm.rules.required
+                                                        ],
+                                                        label: "Type Password"
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          _vm.editedItem
+                                                            .password,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            _vm.editedItem,
+                                                            "password",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "editedItem.password"
+                                                      }
+                                                    })
+                                                  ],
+                                                  1
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "v-col",
+                                                  {
+                                                    attrs: {
+                                                      cols: "12",
+                                                      sm: "12"
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("v-text-field", {
+                                                      attrs: {
+                                                        type: "password",
+                                                        rules: [
+                                                          _vm.rules.required,
+                                                          _vm.passwordMatch
+                                                        ],
+                                                        label: "Retype Password"
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          _vm.editedItem
+                                                            .rpassword,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            _vm.editedItem,
+                                                            "rpassword",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "editedItem.rpassword"
+                                                      }
+                                                    })
+                                                  ],
+                                                  1
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "v-col",
+                                                  {
+                                                    attrs: {
+                                                      cols: "12",
+                                                      sm: "12"
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("v-text-field", {
+                                                      attrs: {
+                                                        type: "email",
+                                                        rules: [
+                                                          _vm.rules.required,
+                                                          _vm.rules.validEmail
+                                                        ],
+                                                        label: "Type Email"
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          _vm.editedItem.email,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            _vm.editedItem,
+                                                            "email",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "editedItem.email"
+                                                      }
+                                                    })
+                                                  ],
+                                                  1
+                                                )
                                               ],
                                               1
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "v-col",
-                                              {
-                                                attrs: { cols: "12", sm: "12" }
-                                              },
-                                              [
-                                                _c("v-text-field", {
-                                                  attrs: {
-                                                    type: "password",
-                                                    rules: [
-                                                      _vm.rules.required,
-                                                      _vm.passwordMatch
-                                                    ],
-                                                    label: "Retype Password"
-                                                  },
-                                                  model: {
-                                                    value:
-                                                      _vm.editedItem.rpassword,
-                                                    callback: function($$v) {
-                                                      _vm.$set(
-                                                        _vm.editedItem,
-                                                        "rpassword",
-                                                        $$v
-                                                      )
-                                                    },
-                                                    expression:
-                                                      "editedItem.rpassword"
-                                                  }
-                                                })
-                                              ],
-                                              1
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "v-col",
-                                              {
-                                                attrs: { cols: "12", sm: "12" }
-                                              },
-                                              [
-                                                _c("v-text-field", {
-                                                  attrs: {
-                                                    type: "email",
-                                                    rules: [
-                                                      _vm.rules.required,
-                                                      _vm.rules.validEmail
-                                                    ],
-                                                    label: "Type Email"
-                                                  },
-                                                  model: {
-                                                    value: _vm.editedItem.email,
-                                                    callback: function($$v) {
-                                                      _vm.$set(
-                                                        _vm.editedItem,
-                                                        "email",
-                                                        $$v
-                                                      )
-                                                    },
-                                                    expression:
-                                                      "editedItem.email"
-                                                  }
-                                                })
-                                              ],
-                                              1
-                                            ),
-                                            _vm._v(" "),
+                                            )
+                                          : _vm._e(),
+                                        _vm._v(" "),
+                                        _c(
+                                          "v-row",
+                                          [
                                             _c(
                                               "v-col",
                                               {

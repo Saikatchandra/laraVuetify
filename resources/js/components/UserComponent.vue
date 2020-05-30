@@ -52,6 +52,8 @@
                   <v-col cols="12" sm="12">
                     <v-text-field type="text" label="Name"  v-model="editedItem.name" :rules="[rules.required, rules.min]" ></v-text-field>
                   </v-col>
+                 </v-row>
+                <v-row v-if="editedIndex == -1">  
                   <v-col cols="12" sm="12">
                     <v-text-field type="password" :rules="[rules.required]" v-model="editedItem.password" label="Type Password"></v-text-field>
                   </v-col>
@@ -61,10 +63,11 @@
                   <v-col cols="12" sm="12">
                     <v-text-field type="email" :rules="[rules.required, rules.validEmail]" v-model="editedItem.email" label="Type Email"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="12">
+                </v-row>
+                <v-row>
+                 <v-col cols="12" sm="12">
                     <v-select :items="roles" :rules="[rules.required]" v-model="editedItem.role" label="Select Role" ></v-select>
-                  </v-col>
-                  
+                  </v-col> 
                 </v-row>
               </v-container>
             </v-card-text>
@@ -308,7 +311,7 @@
       	
         if (this.editedIndex > -1) {
          const index = this.editedIndex
-         axios.put('/api/users/'+this.editedItem.id, {'name': this.editedItem.name})
+         axios.put('/api/users/'+this.editedItem.id, this.editedItem)
 	          .then(res => { 
               this.text = "Record Update Successfully";
               this.snackbar = true
